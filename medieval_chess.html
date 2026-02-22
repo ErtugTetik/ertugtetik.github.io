@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Medieval Chess — Portfolio</title>
+  <meta name="description" content="Multiplayer hex-based turn-based strategy prototype built in Unity." />
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #0f1620;
+      --card2: #0c131c;
+      --text: #e7eef8;
+      --muted: #a9b7c7;
+      --line: rgba(255, 255, 255, .08);
+      --accent: #6ee7ff;
+      --accent2: #a78bfa;
+      --shadow: 0 10px 30px rgba(0, 0, 0, .35);
+      --radius: 16px;
+      --maxw: 1120px;
+      /* daha geniş */
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      min-height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      /* en alta kadar uzasın */
+      font: 15px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+      color: var(--text);
+
+      /* Arkaplan "reset" hissini azaltmak için */
+      background:
+        radial-gradient(900px 500px at 20% -10%, rgba(110, 231, 255, .16), transparent 55%),
+        radial-gradient(900px 500px at 80% 10%, rgba(167, 139, 250, .16), transparent 55%),
+        radial-gradient(700px 500px at 50% 120%, rgba(34, 197, 94, .12), transparent 55%),
+        var(--bg);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: var(--text);
+      text-decoration: none
+    }
+
+    a:hover {
+      opacity: .9
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 22px 10px 72px;
+      /* sol/sağ boşluğu azalttım */
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(110, 231, 255, .9), rgba(167, 139, 250, .9));
+      box-shadow: var(--shadow);
+    }
+
+    .name {
+      font-weight: 650;
+      letter-spacing: .2px
+    }
+
+    .links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .03);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      backdrop-filter: blur(6px);
+    }
+
+    .pill strong {
+      font-weight: 650
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      /* video bloğu soldakiyle aynı genişlik */
+      gap: 14px;
+      /* aradaki boşluğu biraz azalttım */
+      align-items: stretch;
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr
+      }
+
+      .links {
+        justify-content: flex-start
+      }
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255, 255, 255, .04), rgba(255, 255, 255, .02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .card .inner {
+      padding: 22px
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.15;
+      letter-spacing: .2px
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted)
+    }
+
+    .badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px
+    }
+
+    .badge {
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, .18);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .ctaRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .04);
+      font-weight: 600;
+      font-size: 13.5px;
+    }
+
+    .btn.primary {
+      border: 1px solid rgba(110, 231, 255, .35);
+      background: linear-gradient(135deg, rgba(110, 231, 255, .18), rgba(167, 139, 250, .12));
+    }
+
+    .btn small {
+      font-weight: 500;
+      color: var(--muted)
+    }
+
+    .video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--line);
+    }
+
+    .video iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0
+    }
+
+    .section {
+      margin-top: 14px
+    }
+
+    /* biraz yukarı topladım */
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .grid2 {
+        grid-template-columns: 1fr
+      }
+    }
+
+    h2 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      letter-spacing: .2px
+    }
+
+    ul {
+      margin: 10px 0 0 18px;
+      padding: 0
+    }
+
+    li {
+      margin: 6px 0;
+      color: var(--text)
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .kpi {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .kpi .k {
+      background: rgba(0, 0, 0, .18);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .k .v {
+      font-size: 18px;
+      font-weight: 700
+    }
+
+    .k .t {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 16px 0
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace
+    }
+
+    .note {
+      border: 1px dashed rgba(255, 255, 255, .18);
+      background: rgba(255, 255, 255, .03);
+      padding: 12px 14px;
+      border-radius: 14px;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 12.5px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="name">Ertuğ Tetik</div>
+          <div class="muted" style="font-size:12.5px;">Software Developer · Unity Gameplay Systems · Multiplayer</div>
+        </div>
+      </div>
+
+      <nav class="links">
+        <a class="pill" href="#" target="_blank"
+          rel="https://www.linkedin.com/in/ertug-tetik/"><strong>LinkedIn</strong></a>
+        <a class="pill" href="#" target="_blank" rel="mailto:ertug.tetik@example.com"><strong>Email</strong></a>
+        <a class="pill" href="#" target="_blank" rel="noreferrer"><strong>CV (PDF)</strong></a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <div class="hero">
+      <section class="card">
+        <div class="inner">
+          <h1>Medieval Chess <span class="muted" style="font-size:16px; font-weight:600;">(Working Title)</span></h1>
+          <p class="subtitle">
+            Multiplayer, hex-based, turn-based strategy prototype built in Unity.
+            Focused on systems design: procedural maps, facing/rotation, terrain modifiers, and dice-based combat.
+          </p>
+
+          <div class="badges">
+            <span class="badge">Unity (C#)</span>
+            <span class="badge">Turn-Based</span>
+            <span class="badge">Hex Grid</span>
+            <span class="badge">Procedural Generation</span>
+            <span class="badge">Host–Client Multiplayer (Currently Local)</span>
+          </div>
+
+          <div class="ctaRow">
+            <a class="btn primary" href="#video">▶ Watch Gameplay <small>(3 min)</small></a>
+            <a class="btn" href="GDD_English.docx" download>📄 View GDD (PDF)</a>
+            <a class="btn" href="https://kodemi.app/downloads/MedievalChess_Windows_v0.1.zip">Playable Build <small>Read
+                Build Testing Notes Below</small></a>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="kpi">
+            <div class="k">
+              <div class="v">10×10</div>
+              <div class="t">Planned board size</div>
+            </div>
+            <div class="k">
+              <div class="v">1vs1</div>
+              <div class="t">Multiplayer-focused</div>
+            </div>
+            <div class="k">
+              <div class="v">Modifiers</div>
+              <div class="t">Terrains affect unit stats</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIDEO -->
+      <section class="card" id="video">
+        <div class="inner">
+          <h2>Gameplay Video</h2>
+          <p class="muted" style="margin-top:0;">
+            Showcases: procedural map → deployment → movement/rotation → combat → turn switching → multiplayer proof.
+          </p>
+
+          <div class="video" aria-label="Gameplay video">
+            <iframe src="https://www.youtube.com/embed/hg1zjbuGiGc" title="Medieval Chess — Gameplay"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- TURN FLOW (moved up) -->
+    <div class="section">
+      <section class="card">
+        <div class="inner">
+          <h2>Turn Flow (Simplified)</h2>
+          <p class="muted" style="margin-top:0;">A quick overview of the main loop.</p>
+          <div class="note mono">
+            Deploy → Turn Start → Select Unit → Move / Rotate / Attack → Resolve Combat → Switch Turn
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- FEATURES + ARCH -->
+    <div class="section grid2">
+      <section class="card">
+        <div class="inner">
+          <h2>Core Features</h2>
+          <ul>
+            <li>Procedural hex map generation with multiple terrain types (Plains, Forest, Hills, Marsh, Steppe).</li>
+            <li>Terrain-based buffs/debuffs affecting combat stats per unit type.</li>
+            <li>Rotation/facing system (6 directions) with back-attack advantage.</li>
+            <li>Dice-based combat resolution: <span class="mono">Attack + d6</span> vs <span class="mono">Defense +
+                d6</span>.</li>
+            <li>Deployment phase with drag & drop unit placement (prototype: Light Infantry).</li>
+            <li>Turn manager controlling action validation and state switching.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="inner">
+          <h2>Technical Architecture Overview</h2>
+          <p class="muted" style="margin-top:0;">
+            (Code not public — details provided here to demonstrate systems thinking.)
+          </p>
+          <ul>
+            <li>Data-driven design using <span class="mono">ScriptableObjects</span> for unit/terrain configs.</li>
+            <li>Centralized turn-state manager (selection → actions → resolution → turn switch).</li>
+            <li>Hex coordinate system + directional facing logic integrated into combat modifiers.</li>
+            <li>Local host-client model for multiplayer synchronization testing.</li>
+            <li>Planned: disconnect handling with save/load recovery.</li>
+          </ul>
+
+          <div class="divider"></div>
+          <div class="note">
+            <strong>Code samples available upon request.</strong><br />
+            If needed, I can share specific modules under NDA (e.g., turn manager, combat resolver, hex grid utilities).
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- SYSTEMS HIGHLIGHTS -->
+    <div class="section grid2">
+      <section class="card">
+        <div class="inner">
+          <h2>Systems Design Highlights</h2>
+          <ul>
+            <li>Rock-paper-scissors counters between unit categories (infantry / cavalry / archers).</li>
+            <li>Facing + terrain creates positional tactics (frontline shaping, flanks, backstabs).</li>
+            <li>Pre-match economy: draft units within a fixed gold budget.</li>
+            <li>Minimal UI philosophy: maximum information in one screen + hover tooltips.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="build">
+        <div class="inner">
+          <h2>Build Testing Notes (Current)</h2>
+          <ul>
+            <li>Multiplayer currently runs locally. Launch the exe twice: first = Host, second = Client.</li>
+            <li>Three units available in this build (Light Infantry, Light Cavalry, Archer). Drag & drop to deploy.</li>
+            <li>During turns: left click select, right click move, hold and drag to rotate.</li>
+            <li>To attack: hover enemy unit and right click.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div>© <span id="y"></span> Ertuğ Tetik · Portfolio (single-page)</div>
+      <div class="muted">Last updated: <span class="mono">22.02.2026</span></div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+
+</html>
